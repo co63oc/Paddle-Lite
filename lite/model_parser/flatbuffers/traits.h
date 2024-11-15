@@ -45,7 +45,7 @@ inline lite::VarDataType ConvertVarType(proto::VarType_::Type type) {
     CASE(FETCH_LIST);
     CASE(STEP_SCOPES);
     CASE(LOD_RANK_TABLE);
-    CASE(LOD_TENSOR_ARRAY);
+    CASE(DENSE_TENSOR_ARRAY);
     CASE(PLACE_LIST);
     CASE(READER);
     CASE(RAW);
@@ -79,7 +79,7 @@ inline proto::VarType_::Type ConvertVarType(lite::VarDataType type) {
     CASE(FETCH_LIST);
     CASE(STEP_SCOPES);
     CASE(LOD_RANK_TABLE);
-    CASE(LOD_TENSOR_ARRAY);
+    CASE(DENSE_TENSOR_ARRAY);
     CASE(PLACE_LIST);
     CASE(READER);
     CASE(RAW);

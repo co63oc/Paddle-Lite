@@ -48,7 +48,7 @@ namespace lite {
       }                                                            \
       if (type == VarDataType::LOD_TENSOR ||                       \
           type == VarDataType::SELECTED_ROWS ||                    \
-          type == VarDataType::LOD_TENSOR_ARRAY) {                 \
+          type == VarDataType::DENSE_TENSOR_ARRAY) {               \
         any_desc->SetDataType(cpp_desc.GetDataType());             \
         any_desc->SetShape(cpp_desc.GetShape());                   \
       }                                                            \
@@ -68,7 +68,7 @@ void TransformVarDescAnyToCpp<pb::VarDesc>(const pb::VarDesc &any_desc,
       cpp_desc->SetDataType(any_desc.GetDataType());
     }
     if (type == VarDataType::LOD_TENSOR || type == VarDataType::SELECTED_ROWS ||
-        type == VarDataType::LOD_TENSOR_ARRAY) {
+        type == VarDataType::DENSE_TENSOR_ARRAY) {
       cpp_desc->SetDataType(any_desc.GetDataType());
       cpp_desc->SetShape(any_desc.GetShape());
     }
@@ -86,7 +86,7 @@ void TransformVarDescAnyToCpp<fbs::VarDesc>(const fbs::VarDesc &any_desc,
       cpp_desc->SetDataType(any_desc.GetDataType());
     }
     if (type == VarDataType::LOD_TENSOR || type == VarDataType::SELECTED_ROWS ||
-        type == VarDataType::LOD_TENSOR_ARRAY) {
+        type == VarDataType::DENSE_TENSOR_ARRAY) {
       cpp_desc->SetShape(any_desc.GetShape());
     }
   }

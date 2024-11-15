@@ -29,7 +29,7 @@ VarDescAPI::Type VarDesc::GetType() const {
 
   switch (type) {
     GET_TYPE_CASE_ITEM(LOD_TENSOR);
-    GET_TYPE_CASE_ITEM(LOD_TENSOR_ARRAY);
+    GET_TYPE_CASE_ITEM(DENSE_TENSOR_ARRAY);
     GET_TYPE_CASE_ITEM(LOD_RANK_TABLE);
     GET_TYPE_CASE_ITEM(SELECTED_ROWS);
     GET_TYPE_CASE_ITEM(FEED_MINIBATCH);
@@ -52,7 +52,7 @@ void VarDesc::SetType(VarDescAPI::Type type) {
 
   switch (type) {
     SET_TYPE_CASE_ITEM(LOD_TENSOR);
-    SET_TYPE_CASE_ITEM(LOD_TENSOR_ARRAY);
+    SET_TYPE_CASE_ITEM(DENSE_TENSOR_ARRAY);
     SET_TYPE_CASE_ITEM(LOD_RANK_TABLE);
     SET_TYPE_CASE_ITEM(SELECTED_ROWS);
     SET_TYPE_CASE_ITEM(FEED_MINIBATCH);
@@ -217,7 +217,7 @@ void VarDesc::SetLoDLevel(int32_t lod_level) {
     case proto::VarType::LOD_TENSOR:
       desc_->mutable_type()->mutable_lod_tensor()->set_lod_level(lod_level);
       break;
-    case proto::VarType::LOD_TENSOR_ARRAY:
+    case proto::VarType::DENSE_TENSOR_ARRAY:
       desc_->mutable_type()->mutable_tensor_array()->set_lod_level(lod_level);
       break;
     default:
@@ -255,7 +255,7 @@ int32_t VarDesc::GetLoDLevel() const {
   switch (desc_->type().type()) {
     case proto::VarType::LOD_TENSOR:
       return desc_->type().lod_tensor().lod_level();
-    case proto::VarType::LOD_TENSOR_ARRAY:
+    case proto::VarType::DENSE_TENSOR_ARRAY:
       return desc_->type().tensor_array().lod_level();
     default:
       LOG(FATAL)
@@ -291,7 +291,7 @@ const proto::VarType::TensorDesc &VarDesc::tensor_desc() const {
       return desc_->type().selected_rows();
     case proto::VarType::LOD_TENSOR:
       return desc_->type().lod_tensor().tensor();
-    case proto::VarType::LOD_TENSOR_ARRAY:
+    case proto::VarType::DENSE_TENSOR_ARRAY:
       return desc_->type().tensor_array().tensor();
     default:
       LOG(WARNING) << "Getting 'tensor_desc' is not supported by the type("
@@ -327,7 +327,7 @@ proto::VarType::TensorDesc *VarDesc::mutable_tensor_desc() {
       return desc_->mutable_type()->mutable_selected_rows();
     case proto::VarType::LOD_TENSOR:
       return desc_->mutable_type()->mutable_lod_tensor()->mutable_tensor();
-    case proto::VarType::LOD_TENSOR_ARRAY:
+    case proto::VarType::DENSE_TENSOR_ARRAY:
       return desc_->mutable_type()->mutable_tensor_array()->mutable_tensor();
     default:
       LOG(FATAL) << "Getting 'mutable_tensor_desc' is not supported by the "

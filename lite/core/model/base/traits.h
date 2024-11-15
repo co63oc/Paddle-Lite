@@ -68,7 +68,7 @@ enum class VarDataType {
   FETCH_LIST,
   STEP_SCOPES,
   LOD_RANK_TABLE,
-  LOD_TENSOR_ARRAY,
+  DENSE_TENSOR_ARRAY,
   PLACE_LIST,
   READER,
   // Any runtime decided variable type is raw
