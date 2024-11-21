@@ -39,7 +39,7 @@ inline lite::VarDataType ConvertVarType(proto::VarType_::Type type) {
     CASE(FP16);
     CASE(FP32);
     CASE(FP64);
-    CASE(LOD_TENSOR);
+    CASE(DENSE_TENSOR);
     CASE(SELECTED_ROWS);
     CASE(FEED_MINIBATCH);
     CASE(FETCH_LIST);
@@ -73,7 +73,7 @@ inline proto::VarType_::Type ConvertVarType(lite::VarDataType type) {
     CASE(FP16);
     CASE(FP32);
     CASE(FP64);
-    CASE(LOD_TENSOR);
+    CASE(DENSE_TENSOR);
     CASE(SELECTED_ROWS);
     CASE(FEED_MINIBATCH);
     CASE(FETCH_LIST);

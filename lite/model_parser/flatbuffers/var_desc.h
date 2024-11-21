@@ -49,7 +49,7 @@ class VarDescView : public VarDescAPI {
   }
 
   VarDescAPI::Type GetDataType() const {
-    CHECK(GetType() == VarDescAPI::Type::LOD_TENSOR);
+    CHECK(GetType() == VarDescAPI::Type::DENSE_TENSOR);
     return ConvertVarType(desc_->type()->lod_tensor()->tensor()->data_type());
   }
 

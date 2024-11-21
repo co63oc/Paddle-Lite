@@ -98,7 +98,7 @@ enum VarDataType {
   INT8,
 
   // Other types that may need additional descriptions
-  LOD_TENSOR,
+  DENSE_TENSOR,
   SELECTED_ROWS,
   FEED_MINIBATCH,
   FETCH_LIST,

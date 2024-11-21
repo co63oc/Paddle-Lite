@@ -40,7 +40,7 @@ VarDescAPI::Type VarDesc::GetType() const {
     return VarDescAPI::Type::type__
 
   switch (type) {
-    GET_TYPE_CASE_ITEM(LOD_TENSOR);
+    GET_TYPE_CASE_ITEM(DENSE_TENSOR);
     GET_TYPE_CASE_ITEM(DENSE_TENSOR_ARRAY);
     GET_TYPE_CASE_ITEM(LOD_RANK_TABLE);
     GET_TYPE_CASE_ITEM(SELECTED_ROWS);
@@ -69,7 +69,7 @@ void VarDesc::SetType(VarDescAPI::Type type) {
     break
 
   switch (type) {
-    SET_TYPE_CASE_ITEM(LOD_TENSOR);
+    SET_TYPE_CASE_ITEM(DENSE_TENSOR);
     SET_TYPE_CASE_ITEM(DENSE_TENSOR_ARRAY);
     SET_TYPE_CASE_ITEM(LOD_RANK_TABLE);
     SET_TYPE_CASE_ITEM(SELECTED_ROWS);

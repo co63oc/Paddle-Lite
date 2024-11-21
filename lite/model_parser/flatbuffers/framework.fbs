@@ -31,7 +31,7 @@ enum Type : int {
   FP16 = 4,
   FP32 = 5,
   FP64 = 6,
-  LOD_TENSOR = 7,
+  DENSE_TENSOR = 7,
   SELECTED_ROWS = 8,
   FEED_MINIBATCH = 9,
   FETCH_LIST = 10,

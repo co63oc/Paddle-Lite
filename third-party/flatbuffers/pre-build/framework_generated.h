@@ -258,7 +258,7 @@ enum Type {
   Type_FP16 = 4,
   Type_FP32 = 5,
   Type_FP64 = 6,
-  Type_LOD_TENSOR = 7,
+  Type_DENSE_TENSOR = 7,
   Type_SELECTED_ROWS = 8,
   Type_FEED_MINIBATCH = 9,
   Type_FETCH_LIST = 10,
@@ -285,7 +285,7 @@ inline const Type (&EnumValuesType())[21] {
     Type_FP16,
     Type_FP32,
     Type_FP64,
-    Type_LOD_TENSOR,
+    Type_DENSE_TENSOR,
     Type_SELECTED_ROWS,
     Type_FEED_MINIBATCH,
     Type_FETCH_LIST,
@@ -312,7 +312,7 @@ inline const char * const *EnumNamesType() {
     "FP16",
     "FP32",
     "FP64",
-    "LOD_TENSOR",
+    "DENSE_TENSOR",
     "SELECTED_ROWS",
     "FEED_MINIBATCH",
     "FETCH_LIST",
@@ -1131,7 +1131,7 @@ struct VarType FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_TYPE = 4,
     VT_SELECTED_ROWS = 6,
-    VT_LOD_TENSOR = 8,
+    VT_DENSE_TENSOR = 8,
     VT_TENSOR_ARRAY = 10,
     VT_READER = 12,
     VT_TUPLE = 14
@@ -1149,10 +1149,10 @@ struct VarType FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return GetPointer<paddle::lite::fbs::proto::VarType_::TensorDesc *>(VT_SELECTED_ROWS);
   }
   const paddle::lite::fbs::proto::VarType_::LoDTensorDesc *lod_tensor() const {
-    return GetPointer<const paddle::lite::fbs::proto::VarType_::LoDTensorDesc *>(VT_LOD_TENSOR);
+    return GetPointer<const paddle::lite::fbs::proto::VarType_::LoDTensorDesc *>(VT_DENSE_TENSOR);
   }
   paddle::lite::fbs::proto::VarType_::LoDTensorDesc *mutable_lod_tensor() {
-    return GetPointer<paddle::lite::fbs::proto::VarType_::LoDTensorDesc *>(VT_LOD_TENSOR);
+    return GetPointer<paddle::lite::fbs::proto::VarType_::LoDTensorDesc *>(VT_DENSE_TENSOR);
   }
   const paddle::lite::fbs::proto::VarType_::LoDTensorArrayDesc *tensor_array() const {
     return GetPointer<const paddle::lite::fbs::proto::VarType_::LoDTensorArrayDesc *>(VT_TENSOR_ARRAY);
@@ -1177,7 +1177,7 @@ struct VarType FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_TYPE) &&
            VerifyOffset(verifier, VT_SELECTED_ROWS) &&
            verifier.VerifyTable(selected_rows()) &&
-           VerifyOffset(verifier, VT_LOD_TENSOR) &&
+           VerifyOffset(verifier, VT_DENSE_TENSOR) &&
            verifier.VerifyTable(lod_tensor()) &&
            VerifyOffset(verifier, VT_TENSOR_ARRAY) &&
            verifier.VerifyTable(tensor_array()) &&
@@ -1203,7 +1203,7 @@ struct VarTypeBuilder {
     fbb_.AddOffset(VarType::VT_SELECTED_ROWS, selected_rows);
   }
   void add_lod_tensor(flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc> lod_tensor) {
-    fbb_.AddOffset(VarType::VT_LOD_TENSOR, lod_tensor);
+    fbb_.AddOffset(VarType::VT_DENSE_TENSOR, lod_tensor);
   }
   void add_tensor_array(flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorArrayDesc> tensor_array) {
     fbb_.AddOffset(VarType::VT_TENSOR_ARRAY, tensor_array);
@@ -1549,17 +1549,17 @@ struct ReaderDesc FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return ReaderDescTypeTable();
   }
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_LOD_TENSOR = 4
+    VT_DENSE_TENSOR = 4
   };
   const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc>> *lod_tensor() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc>> *>(VT_LOD_TENSOR);
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc>> *>(VT_DENSE_TENSOR);
   }
   flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc>> *mutable_lod_tensor() {
-    return GetPointer<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc>> *>(VT_LOD_TENSOR);
+    return GetPointer<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc>> *>(VT_DENSE_TENSOR);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_LOD_TENSOR) &&
+           VerifyOffset(verifier, VT_DENSE_TENSOR) &&
            verifier.VerifyVector(lod_tensor()) &&
            verifier.VerifyVectorOfTables(lod_tensor()) &&
            verifier.EndTable();
@@ -1574,7 +1574,7 @@ struct ReaderDescBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
   void add_lod_tensor(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::LoDTensorDesc>>> lod_tensor) {
-    fbb_.AddOffset(ReaderDesc::VT_LOD_TENSOR, lod_tensor);
+    fbb_.AddOffset(ReaderDesc::VT_DENSE_TENSOR, lod_tensor);
   }
   explicit ReaderDescBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -2998,7 +2998,7 @@ inline const flatbuffers::TypeTable *TypeTypeTable() {
     "FP16",
     "FP32",
     "FP64",
-    "LOD_TENSOR",
+    "DENSE_TENSOR",
     "SELECTED_ROWS",
     "FEED_MINIBATCH",
     "FETCH_LIST",
