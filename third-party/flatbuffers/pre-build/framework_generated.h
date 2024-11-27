@@ -1098,7 +1098,7 @@ struct VarTypeT : public flatbuffers::NativeTable {
   typedef VarType TableType;
   paddle::lite::fbs::proto::VarType_::Type type;
   std::unique_ptr<paddle::lite::fbs::proto::VarType_::TensorDescT> selected_rows;
-  std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT> lod_tensor;
+  std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT> dense_tensor;
   std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorArrayDescT> tensor_array;
   std::unique_ptr<paddle::lite::fbs::proto::VarType_::ReaderDescT> reader;
   std::unique_ptr<paddle::lite::fbs::proto::VarType_::TupleT> tuple;
@@ -1111,7 +1111,7 @@ inline bool operator==(const VarTypeT &lhs, const VarTypeT &rhs) {
   return
       (lhs.type == rhs.type) &&
       (lhs.selected_rows == rhs.selected_rows) &&
-      (lhs.lod_tensor == rhs.lod_tensor) &&
+      (lhs.dense_tensor == rhs.dense_tensor) &&
       (lhs.tensor_array == rhs.tensor_array) &&
       (lhs.reader == rhs.reader) &&
       (lhs.tuple == rhs.tuple);
@@ -1148,10 +1148,10 @@ struct VarType FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   paddle::lite::fbs::proto::VarType_::TensorDesc *mutable_selected_rows() {
     return GetPointer<paddle::lite::fbs::proto::VarType_::TensorDesc *>(VT_SELECTED_ROWS);
   }
-  const paddle::lite::fbs::proto::VarType_::DenseTensorDesc *lod_tensor() const {
+  const paddle::lite::fbs::proto::VarType_::DenseTensorDesc *dense_tensor() const {
     return GetPointer<const paddle::lite::fbs::proto::VarType_::DenseTensorDesc *>(VT_DENSE_TENSOR);
   }
-  paddle::lite::fbs::proto::VarType_::DenseTensorDesc *mutable_lod_tensor() {
+  paddle::lite::fbs::proto::VarType_::DenseTensorDesc *mutable_dense_tensor() {
     return GetPointer<paddle::lite::fbs::proto::VarType_::DenseTensorDesc *>(VT_DENSE_TENSOR);
   }
   const paddle::lite::fbs::proto::VarType_::DenseTensorArrayDesc *tensor_array() const {
@@ -1178,7 +1178,7 @@ struct VarType FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyOffset(verifier, VT_SELECTED_ROWS) &&
            verifier.VerifyTable(selected_rows()) &&
            VerifyOffset(verifier, VT_DENSE_TENSOR) &&
-           verifier.VerifyTable(lod_tensor()) &&
+           verifier.VerifyTable(dense_tensor()) &&
            VerifyOffset(verifier, VT_TENSOR_ARRAY) &&
            verifier.VerifyTable(tensor_array()) &&
            VerifyOffset(verifier, VT_READER) &&
@@ -1202,8 +1202,8 @@ struct VarTypeBuilder {
   void add_selected_rows(flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::TensorDesc> selected_rows) {
     fbb_.AddOffset(VarType::VT_SELECTED_ROWS, selected_rows);
   }
-  void add_lod_tensor(flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc> lod_tensor) {
-    fbb_.AddOffset(VarType::VT_DENSE_TENSOR, lod_tensor);
+  void add_dense_tensor(flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc> dense_tensor) {
+    fbb_.AddOffset(VarType::VT_DENSE_TENSOR, dense_tensor);
   }
   void add_tensor_array(flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorArrayDesc> tensor_array) {
     fbb_.AddOffset(VarType::VT_TENSOR_ARRAY, tensor_array);
@@ -1230,7 +1230,7 @@ inline flatbuffers::Offset<VarType> CreateVarType(
     flatbuffers::FlatBufferBuilder &_fbb,
     paddle::lite::fbs::proto::VarType_::Type type = paddle::lite::fbs::proto::VarType_::Type_BOOL,
     flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::TensorDesc> selected_rows = 0,
-    flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc> lod_tensor = 0,
+    flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc> dense_tensor = 0,
     flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorArrayDesc> tensor_array = 0,
     flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::ReaderDesc> reader = 0,
     flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::Tuple> tuple = 0) {
@@ -1238,7 +1238,7 @@ inline flatbuffers::Offset<VarType> CreateVarType(
   builder_.add_tuple(tuple);
   builder_.add_reader(reader);
   builder_.add_tensor_array(tensor_array);
-  builder_.add_lod_tensor(lod_tensor);
+  builder_.add_dense_tensor(dense_tensor);
   builder_.add_selected_rows(selected_rows);
   builder_.add_type(type);
   return builder_.Finish();
@@ -1527,14 +1527,14 @@ flatbuffers::Offset<DenseTensorArrayDesc> CreateDenseTensorArrayDesc(flatbuffers
 
 struct ReaderDescT : public flatbuffers::NativeTable {
   typedef ReaderDesc TableType;
-  std::vector<std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT>> lod_tensor;
+  std::vector<std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT>> dense_tensor;
   ReaderDescT() {
   }
 };
 
 inline bool operator==(const ReaderDescT &lhs, const ReaderDescT &rhs) {
   return
-      (lhs.lod_tensor == rhs.lod_tensor);
+      (lhs.dense_tensor == rhs.dense_tensor);
 }
 
 inline bool operator!=(const ReaderDescT &lhs, const ReaderDescT &rhs) {
@@ -1551,17 +1551,17 @@ struct ReaderDesc FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_DENSE_TENSOR = 4
   };
-  const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *lod_tensor() const {
+  const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *dense_tensor() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *>(VT_DENSE_TENSOR);
   }
-  flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *mutable_lod_tensor() {
+  flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *mutable_dense_tensor() {
     return GetPointer<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *>(VT_DENSE_TENSOR);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_DENSE_TENSOR) &&
-           verifier.VerifyVector(lod_tensor()) &&
-           verifier.VerifyVectorOfTables(lod_tensor()) &&
+           verifier.VerifyVector(dense_tensor()) &&
+           verifier.VerifyVectorOfTables(dense_tensor()) &&
            verifier.EndTable();
   }
   ReaderDescT *UnPack(const flatbuffers::resolver_function_t *_resolver = nullptr) const;
@@ -1573,8 +1573,8 @@ struct ReaderDescBuilder {
   typedef ReaderDesc Table;
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_lod_tensor(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>>> lod_tensor) {
-    fbb_.AddOffset(ReaderDesc::VT_DENSE_TENSOR, lod_tensor);
+  void add_dense_tensor(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>>> dense_tensor) {
+    fbb_.AddOffset(ReaderDesc::VT_DENSE_TENSOR, dense_tensor);
   }
   explicit ReaderDescBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1590,19 +1590,19 @@ struct ReaderDescBuilder {
 
 inline flatbuffers::Offset<ReaderDesc> CreateReaderDesc(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>>> lod_tensor = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>>> dense_tensor = 0) {
   ReaderDescBuilder builder_(_fbb);
-  builder_.add_lod_tensor(lod_tensor);
+  builder_.add_dense_tensor(dense_tensor);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<ReaderDesc> CreateReaderDescDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *lod_tensor = nullptr) {
-  auto lod_tensor__ = lod_tensor ? _fbb.CreateVector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>>(*lod_tensor) : 0;
+    const std::vector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> *dense_tensor = nullptr) {
+  auto dense_tensor__ = dense_tensor ? _fbb.CreateVector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>>(*dense_tensor) : 0;
   return paddle::lite::fbs::proto::VarType_::CreateReaderDesc(
       _fbb,
-      lod_tensor__);
+      dense_tensor__);
 }
 
 flatbuffers::Offset<ReaderDesc> CreateReaderDesc(flatbuffers::FlatBufferBuilder &_fbb, const ReaderDescT *_o, const flatbuffers::rehasher_function_t *_rehasher = nullptr);
@@ -2551,7 +2551,7 @@ inline void VarType::UnPackTo(VarTypeT *_o, const flatbuffers::resolver_function
   (void)_resolver;
   { auto _e = type(); _o->type = _e; }
   { auto _e = selected_rows(); if (_e) _o->selected_rows = std::unique_ptr<paddle::lite::fbs::proto::VarType_::TensorDescT>(_e->UnPack(_resolver)); }
-  { auto _e = lod_tensor(); if (_e) _o->lod_tensor = std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT>(_e->UnPack(_resolver)); }
+  { auto _e = dense_tensor(); if (_e) _o->dense_tensor = std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT>(_e->UnPack(_resolver)); }
   { auto _e = tensor_array(); if (_e) _o->tensor_array = std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorArrayDescT>(_e->UnPack(_resolver)); }
   { auto _e = reader(); if (_e) _o->reader = std::unique_ptr<paddle::lite::fbs::proto::VarType_::ReaderDescT>(_e->UnPack(_resolver)); }
   { auto _e = tuple(); if (_e) _o->tuple = std::unique_ptr<paddle::lite::fbs::proto::VarType_::TupleT>(_e->UnPack(_resolver)); }
@@ -2567,7 +2567,7 @@ inline flatbuffers::Offset<VarType> CreateVarType(flatbuffers::FlatBufferBuilder
   struct _VectorArgs { flatbuffers::FlatBufferBuilder *__fbb; const VarTypeT* __o; const flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
   auto _type = _o->type;
   auto _selected_rows = _o->selected_rows ? CreateTensorDesc(_fbb, _o->selected_rows.get(), _rehasher) : 0;
-  auto _lod_tensor = _o->lod_tensor ? CreateDenseTensorDesc(_fbb, _o->lod_tensor.get(), _rehasher) : 0;
+  auto _dense_tensor = _o->dense_tensor ? CreateDenseTensorDesc(_fbb, _o->dense_tensor.get(), _rehasher) : 0;
   auto _tensor_array = _o->tensor_array ? CreateDenseTensorArrayDesc(_fbb, _o->tensor_array.get(), _rehasher) : 0;
   auto _reader = _o->reader ? CreateReaderDesc(_fbb, _o->reader.get(), _rehasher) : 0;
   auto _tuple = _o->tuple ? CreateTuple(_fbb, _o->tuple.get(), _rehasher) : 0;
@@ -2575,7 +2575,7 @@ inline flatbuffers::Offset<VarType> CreateVarType(flatbuffers::FlatBufferBuilder
       _fbb,
       _type,
       _selected_rows,
-      _lod_tensor,
+      _dense_tensor,
       _tensor_array,
       _reader,
       _tuple);
@@ -2679,7 +2679,7 @@ inline ReaderDescT *ReaderDesc::UnPack(const flatbuffers::resolver_function_t *_
 inline void ReaderDesc::UnPackTo(ReaderDescT *_o, const flatbuffers::resolver_function_t *_resolver) const {
   (void)_o;
   (void)_resolver;
-  { auto _e = lod_tensor(); if (_e) { _o->lod_tensor.resize(_e->size()); for (flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->lod_tensor[_i] = std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT>(_e->Get(_i)->UnPack(_resolver)); } } }
+  { auto _e = dense_tensor(); if (_e) { _o->dense_tensor.resize(_e->size()); for (flatbuffers::uoffset_t _i = 0; _i < _e->size(); _i++) { _o->dense_tensor[_i] = std::unique_ptr<paddle::lite::fbs::proto::VarType_::DenseTensorDescT>(_e->Get(_i)->UnPack(_resolver)); } } }
 }
 
 inline flatbuffers::Offset<ReaderDesc> ReaderDesc::Pack(flatbuffers::FlatBufferBuilder &_fbb, const ReaderDescT* _o, const flatbuffers::rehasher_function_t *_rehasher) {
@@ -2690,10 +2690,10 @@ inline flatbuffers::Offset<ReaderDesc> CreateReaderDesc(flatbuffers::FlatBufferB
   (void)_rehasher;
   (void)_o;
   struct _VectorArgs { flatbuffers::FlatBufferBuilder *__fbb; const ReaderDescT* __o; const flatbuffers::rehasher_function_t *__rehasher; } _va = { &_fbb, _o, _rehasher}; (void)_va;
-  auto _lod_tensor = _fbb.CreateVector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> (_o->lod_tensor.size(), [](size_t i, _VectorArgs *__va) { return CreateDenseTensorDesc(*__va->__fbb, __va->__o->lod_tensor[i].get(), __va->__rehasher); }, &_va );
+  auto _dense_tensor = _fbb.CreateVector<flatbuffers::Offset<paddle::lite::fbs::proto::VarType_::DenseTensorDesc>> (_o->dense_tensor.size(), [](size_t i, _VectorArgs *__va) { return CreateDenseTensorDesc(*__va->__fbb, __va->__o->dense_tensor[i].get(), __va->__rehasher); }, &_va );
   return paddle::lite::fbs::proto::VarType_::CreateReaderDesc(
       _fbb,
-      _lod_tensor);
+      _dense_tensor);
 }
 
 inline TupleT *Tuple::UnPack(const flatbuffers::resolver_function_t *_resolver) const {
@@ -3172,7 +3172,7 @@ inline const flatbuffers::TypeTable *VarTypeTypeTable() {
   static const char * const names[] = {
     "type",
     "selected_rows",
-    "lod_tensor",
+    "dense_tensor",
     "tensor_array",
     "reader",
     "tuple"
@@ -3247,7 +3247,7 @@ inline const flatbuffers::TypeTable *ReaderDescTypeTable() {
     paddle::lite::fbs::proto::VarType_::DenseTensorDescTypeTable
   };
   static const char * const names[] = {
-    "lod_tensor"
+    "dense_tensor"
   };
   static const flatbuffers::TypeTable tt = {
     flatbuffers::ST_TABLE, 1, type_codes, type_refs, nullptr, names

@@ -150,7 +150,7 @@ class VarType : public StructBuilder {
   explicit VarType(BinaryTable* table) : StructBuilder(table) {
     New<enum_builder>("type");
     New<TensorDesc>("selected_rows");
-    New<DenseTensorDesc>("lod_tensor");
+    New<DenseTensorDesc>("dense_tensor");
     New<DenseTensorArrayDesc>("tensor_array");
     New<ReaderDesc>("reader");
     New<Tuple>("tuple");
