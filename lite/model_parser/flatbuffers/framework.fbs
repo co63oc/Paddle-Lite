@@ -102,8 +102,8 @@ namespace paddle.lite.fbs.proto;
 table VarType {
   type:paddle.lite.fbs.proto.VarType_.Type;
   selected_rows:paddle.lite.fbs.proto.VarType_.TensorDesc;
-  lod_tensor:paddle.lite.fbs.proto.VarType_.LoDTensorDesc;
-  tensor_array:paddle.lite.fbs.proto.VarType_.LoDTensorArrayDesc;
+  lod_tensor:paddle.lite.fbs.proto.VarType_.DenseTensorDesc;
+  tensor_array:paddle.lite.fbs.proto.VarType_.DenseTensorArrayDesc;
   reader:paddle.lite.fbs.proto.VarType_.ReaderDesc;
   tuple:paddle.lite.fbs.proto.VarType_.Tuple;
 }
@@ -115,18 +115,18 @@ table TensorDesc {
   dims:[long];
 }
 
-table LoDTensorDesc {
+table DenseTensorDesc {
   tensor:paddle.lite.fbs.proto.VarType_.TensorDesc (required);
   lod_level:int;
 }
 
-table LoDTensorArrayDesc {
+table DenseTensorArrayDesc {
   tensor:paddle.lite.fbs.proto.VarType_.TensorDesc (required);
   lod_level:int;
 }
 
 table ReaderDesc {
-  lod_tensor:[paddle.lite.fbs.proto.VarType_.LoDTensorDesc];
+  lod_tensor:[paddle.lite.fbs.proto.VarType_.DenseTensorDesc];
 }
 
 table Tuple {

@@ -46,8 +46,8 @@ class ParamDescView : public ParamDescReadAPI {
   void Init() {
     CHECK(desc_);
     CHECK(desc_->variable_type() ==
-          proto::ParamDesc_::VariableDesc_LoDTensorDesc);
-    tensor_desc_ = desc_->variable_as<proto::ParamDesc_::LoDTensorDesc>();
+          proto::ParamDesc_::VariableDesc_DenseTensorDesc);
+    tensor_desc_ = desc_->variable_as<proto::ParamDesc_::DenseTensorDesc>();
     CHECK(tensor_desc_);
     CHECK(tensor_desc_->data());
   }
@@ -79,7 +79,7 @@ class ParamDescView : public ParamDescReadAPI {
 
  private:
   proto::ParamDesc const* desc_;
-  proto::ParamDesc_::LoDTensorDesc const* tensor_desc_;
+  proto::ParamDesc_::DenseTensorDesc const* tensor_desc_;
 };
 
 class CombinedParamsDescView : public CombinedParamsDescReadAPI {
@@ -128,18 +128,18 @@ class CombinedParamsDescView : public CombinedParamsDescReadAPI {
 class ParamDesc : public ParamDescAPI {
  public:
   ParamDesc() : owned_(true), desc_(new proto::ParamDescT()) {
-    desc_->variable.Set(proto::ParamDesc_::LoDTensorDescT());
-    lod_tensor_ = desc_->variable.AsLoDTensorDesc();
+    desc_->variable.Set(proto::ParamDesc_::DenseTensorDescT());
+    lod_tensor_ = desc_->variable.AsDenseTensorDesc();
     CHECK(lod_tensor_);
   }
 
   explicit ParamDesc(proto::ParamDescT* desc) : desc_(desc) {
     if (desc_->variable.type == proto::ParamDesc_::VariableDesc_NONE) {
-      desc_->variable.Set(proto::ParamDesc_::LoDTensorDescT());
+      desc_->variable.Set(proto::ParamDesc_::DenseTensorDescT());
     }
     CHECK(desc_->variable.type ==
-          proto::ParamDesc_::VariableDesc_LoDTensorDesc);
-    lod_tensor_ = desc_->variable.AsLoDTensorDesc();
+          proto::ParamDesc_::VariableDesc_DenseTensorDesc);
+    lod_tensor_ = desc_->variable.AsDenseTensorDesc();
     CHECK(lod_tensor_);
   }
 
@@ -195,7 +195,7 @@ class ParamDesc : public ParamDescAPI {
  private:
   bool owned_{false};
   proto::ParamDescT* desc_{nullptr};
-  proto::ParamDesc_::LoDTensorDescT* lod_tensor_{nullptr};
+  proto::ParamDesc_::DenseTensorDescT* lod_tensor_{nullptr};
   flatbuffers::DetachedBuffer buf_;
   flatbuffers::FlatBufferBuilder fbb_;
 };

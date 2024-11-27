@@ -128,8 +128,8 @@ class VarDesc : public VarDescAPI {
     if (!desc_->type) {
       desc_->type = std::unique_ptr<proto::VarTypeT>(new proto::VarTypeT());
       desc_->type->lod_tensor =
-          std::unique_ptr<proto::VarType_::LoDTensorDescT>(
-              new proto::VarType_::LoDTensorDescT());
+          std::unique_ptr<proto::VarType_::DenseTensorDescT>(
+              new proto::VarType_::DenseTensorDescT());
       desc_->type->lod_tensor->tensor =
           std::unique_ptr<proto::VarType_::TensorDescT>(
               new proto::VarType_::TensorDescT());
